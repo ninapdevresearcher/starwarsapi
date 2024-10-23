@@ -61,13 +61,7 @@ def replay_error(text, code):
     return response
 
 
-def character(request, slug_char):
-    print(request.GET)
-    return HttpResponse(f"Information about character: {slug_char}.")
-
-
-def list_characters(request):
-    return HttpResponse("list_characters")
+SHOW_LIMIT = 5
 
 
 def list_planets(request):
