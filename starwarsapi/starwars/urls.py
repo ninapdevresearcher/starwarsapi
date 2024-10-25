@@ -17,3 +17,4 @@ urlpatterns = [
     path('starships/<slug:slug_ship>', st.starship_by_slug),
     path('starships/', st.list_starships),
 ]
+

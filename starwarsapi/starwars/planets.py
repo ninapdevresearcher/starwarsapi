@@ -49,7 +49,7 @@ def list_planets(request):
         "total_quantity": len(list_of_planets),
         "data": [pl.to_json() for pl in part],
     }
-    response = HttpResponse(json.dumps(data), content_type='application/json', status=201)
+    response = HttpResponse(json.dumps(data), content_type='application/json', status=200)
     return response
 
 
@@ -64,7 +64,7 @@ def planet_by_id(request, id_planet):
             "success": True,
             "data": [obj.to_json()],
         }
-        response = HttpResponse(json.dumps(data), content_type='application/json', status=201)
+        response = HttpResponse(json.dumps(data), content_type='application/json', status=200)
         return response
 
 
@@ -79,6 +79,6 @@ def planet_by_slug(request, slug_planet):
             "success": True,
             "data": [obj.to_json()],
         }
-        response = HttpResponse(json.dumps(data), content_type='application/json', status=201)
+        response = HttpResponse(json.dumps(data), content_type='application/json', status=200)
         return response
 
