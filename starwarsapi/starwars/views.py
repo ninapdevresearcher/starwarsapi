@@ -2,6 +2,17 @@ from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 import json
 # from rest_framework.views import exception_handler
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
+from .models import *
+from .planets import list_of_planets
+from .starships import list_of_starships
+from .characters import list_of_characters
+from .serializers import *
+
+
+SHOW_LIMIT = 5
 
 
 def fill_out_the_json(code, data_list):
@@ -61,34 +72,136 @@ def replay_error(text, code):
     return response
 
 
-SHOW_LIMIT = 5
+class GetMethodPlanet(viewsets.ModelViewSet):
+    model_name = Planet
+    queryset = model_name.objects.all()
+    serializer_class = PlanetSerializer
+
+    def list(self, request, *args, **kwargs):
+        # data = list(Planet.objects.all().values())
+        list_of_planets.sort(key=lambda x: x.name)
+        objs = [pl.to_json() for pl in list_of_planets]
+        data = objs[:5]
+        return Response(data)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = list(self.model_name.objects.filter(id=kwargs['pk']).values())
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        model_serializer_data = self.serializer_class(data=request.data)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Added Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "please fill the datails", "status": status_code})
+
+    def destroy(self, request, *args, **kwargs):
+        model_data = self.model_name.objects.filter(id=kwargs['pk'])
+        if model_data:
+            model_data.delete()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product delete Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data not found", "status": status_code})
+
+    def update(self, request, *args, **kwargs):
+        model_details = self.model_name.objects.get(id=kwargs['pk'])
+        model_serializer_data = PlanetSerializer(model_details, data=request.data, partial=True)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Update Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data Not found", "status": status_code})
 
 
-def list_planets(request):
-    return HttpResponse("list_planets")
+class GetMethodCharacter(viewsets.ModelViewSet):
+    model_name = Character
+    queryset = model_name.objects.all()
+    serializer_class = CharacterSerializer
+
+    def list(self, request, *args, **kwargs):
+        # data = list(Planet.objects.all().values())
+        list_of_planets.sort(key=lambda x: x.name)
+        objs = [pl.to_json() for pl in list_of_planets]
+        data = objs[:5]
+        return Response(data)
+
+    def retrieve(self, request, *args, **kwargs):
+        data = list(self.model_name.objects.filter(id=kwargs['pk']).values())
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        model_serializer_data = self.serializer_class(data=request.data)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Added Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "please fill the datails", "status": status_code})
+
+    def destroy(self, request, *args, **kwargs):
+        model_data = self.model_name.objects.filter(id=kwargs['pk'])
+        if model_data:
+            model_data.delete()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product delete Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data not found", "status": status_code})
+
+    def update(self, request, *args, **kwargs):
+        model_details = self.model_name.objects.get(id=kwargs['pk'])
+        model_serializer_data = PlanetSerializer(model_details, data=request.data, partial=True)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Update Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data Not found", "status": status_code})
 
 
-def list_vehicles(request):
-    return HttpResponse("list_vehicles")
+class GetMethodStarship(viewsets.ModelViewSet):
+    model_name = Starship
+    queryset = model_name.objects.all()
+    serializer_class = StarshipSerializer
 
+    def list(self, request, *args, **kwargs):
+        # data = list(Planet.objects.all().values())
+        list_of_planets.sort(key=lambda x: x.name)
+        objs = [pl.to_json() for pl in list_of_planets]
+        data = objs[:5]
+        return Response(data)
 
-def list_sentient_species(request):
-    return HttpResponse("list_sentient_species")
+    def retrieve(self, request, *args, **kwargs):
+        data = list(self.model_name.objects.filter(id=kwargs['pk']).values())
+        return Response(data)
 
+    def create(self, request, *args, **kwargs):
+        model_serializer_data = self.serializer_class(data=request.data)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Added Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "please fill the datails", "status": status_code})
 
-# ??????????????????????????????????
-# def custom_exception_handler(exc, context):
-#     # Call REST framework's default exception handler first,
-#     # to get the standard error response.
-#     response = exception_handler(exc, context)
-#
-#     # Now add the HTTP status code to the response.
-#     if response is not None:
-#         response.data['status_code'] = response.status_code
-#
-#     return response
+    def destroy(self, request, *args, **kwargs):
+        model_data = self.model_name.objects.filter(id=kwargs['pk'])
+        if model_data:
+            model_data.delete()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product delete Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data not found", "status": status_code})
 
-
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'my_project.my_app.utils.custom_exception_handler'
-# }
+    def update(self, request, *args, **kwargs):
+        model_details = self.model_name.objects.get(id=kwargs['pk'])
+        model_serializer_data = PlanetSerializer(model_details, data=request.data, partial=True)
+        if model_serializer_data.is_valid():
+            model_serializer_data.save()
+            status_code = status.HTTP_201_CREATED
+            return Response({"message": "Product Update Sucessfully", "status": status_code})
+        status_code = status.HTTP_400_BAD_REQUEST
+        return Response({"message": "Product data Not found", "status": status_code})

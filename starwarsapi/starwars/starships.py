@@ -1,6 +1,6 @@
 import json
 from django.http import HttpResponse
-from starwars.views import SHOW_LIMIT, page_not_found
+# from starwars.views import SHOW_LIMIT, page_not_found
 from itertools import count
 
 
