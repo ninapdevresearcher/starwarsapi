@@ -1,18 +1,10 @@
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponse
 import json
-# from rest_framework.views import exception_handler
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
-from .models import *
 from .planets import list_of_planets
-from .starships import list_of_starships
-from .characters import list_of_characters
 from .serializers import *
-
-
-SHOW_LIMIT = 5
 
 
 def fill_out_the_json(code, data_list):
@@ -55,20 +47,6 @@ def index(request):
             "data": {},
         }
     response = HttpResponse(json.dumps(data), content_type='application/json', status=201)
-    return response
-
-
-def page_not_found(request, exception):
-    return replay_error("В нашей вселенной нет такой страницы.", 404)
-
-
-def replay_error(text, code):
-    data = {
-        "success": False,
-        "message": text,
-        "code": code,
-    }
-    response = HttpResponse(json.dumps(data), content_type='application/json', status=code)
     return response
 
 

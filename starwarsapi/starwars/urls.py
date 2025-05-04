@@ -3,12 +3,8 @@ from . import views as v
 from . import characters as ch
 from . import planets as pl
 from . import starships as st
-from rest_framework.routers import DefaultRouter, SimpleRouter
+from rest_framework.routers import SimpleRouter
 
-
-# router = DefaultRouter()
-# router.register('planet', v.GetMethod, basename='planet')
-# urlpatterns = router.urls
 
 router = SimpleRouter()
 router.register('planet', v.GetMethodPlanet, basename='planet')
